@@ -1,25 +1,35 @@
 `<template>
-  <div>
-    <app-header></app-header>
-    <app-bookstore></app-bookstore>
+  <div id="app">
+    <app-bookstore v-bind:books="json"></app-bookstore>
   </div>
 </template>
 
 <script>
-import header from "./components/header.vue";
 import bookstore from "./components/bookstore.vue";
 
 export default {
+  name: "app",
   components: {
-    "app-header": header, // use app-header because <header></header> is already an html-tag
     "app-bookstore": bookstore
+  },
+  data() {
+    return {
+      json: []
+    };
+  },
+  created: function() {
+    fetch("https://api.myjson.com/bins/1h3vb3")
+      .then(r => r.json())
+      .then(json => {
+        console.log(json.books);
+        this.json = json.books;
+      });
   }
 };
 </script>
 
 <style>
 body {
-  margin: 0;
   font-family: "Nunito SemiBold";
 }
 </style>

@@ -7,9 +7,7 @@
 
 <script>
 export default {
-  components: {
-    props: { books }
-  },
+  props: ["books"],
   data() {
     return {
       search: ""

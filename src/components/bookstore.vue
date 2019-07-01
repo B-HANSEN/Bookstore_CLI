@@ -1,17 +1,26 @@
 `<template>
-  <div id="container" class="d-flex flex-wrap justify-content-around">
-    <div class="flip-card" v-for="book in filteredBooks" v-bind:key="book">
-      <div class="flip-card-intermediate">
-        <div class="flip-card-inner">
-          <div class="flip-card-front">
-            <img :src="book.portada" />
-          </div>
-          <div class="flip-card-back">
-            <h5>{{ book.titulo }}</h5>
-            <p>{{ book.descripcion }}</p>
-            <a data-fancybox="gallery" :href="book.detalle">
-              <button>more info</button>
-            </a>
+  <div>
+    <header>
+      <img src="../../src/assets/screenshot_new.png" class="logo_img" alt="logo" />
+      <div class="searchDiv">
+        <input type="text" class="searchfield" v-model="search" placeholder="Search..." />
+      </div>
+    </header>
+
+    <div id="container" class="d-flex flex-wrap justify-content-around">
+      <div class="flip-card" v-for="(book,i) in filteredBooks" v-bind:key="i" :data-index="i">
+        <div class="flip-card-intermediate">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <img :src="book.portada" />
+            </div>
+            <div class="flip-card-back">
+              <h5>{{ book.titulo }}</h5>
+              <p>{{ book.descripcion }}</p>
+              <a data-fancybox="gallery" :href="book.detalle">
+                <button>more info</button>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -21,34 +30,69 @@
 
 <script>
 export default {
-  components: {
-    props: { books }
-  },
+  components: {},
+  props: ["books"],
   data() {
     return {
-      json: []
+      search: ""
     };
   },
-  created: function() {
-    fetch("https://api.myjson.com/bins/1h3vb3")
-      .then(r => r.json())
-      .then(json => {
-        console.log(json.books);
-        this.json = json.books;
+  computed: {
+    filteredBooks: function() {
+      return this.books.filter(book => {
+        return book.titulo.toLowerCase().includes(this.search.toLowerCase());
       });
+    }
   }
 };
 </script>
 
 <style>
+header {
+  padding-bottom: 30px;
+  border: 1px dashed lightgrey;
+  background-color: #fdf7f7 !important;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+}
+
+.logo {
+  padding-left: 50px;
+  padding-top: 20px;
+}
+
+.logo_img {
+  width: 30%;
+}
+
+img {
+  width: 60%;
+}
+
+.searchDiv {
+  padding: 10px 20px 0px 0px;
+}
+
+.searchfield {
+  width: 300px;
+  height: 20px;
+  padding: 10px;
+}
+
 body {
   margin-top: 250px;
   /* font-family: Arial, Helvetica, sans-serif; */
   background-color: #fdf7f7;
 }
-img {
-  width: 60%;
+
+#container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
+
 .flip-card {
   background-color: transparent;
   height: 300px;
